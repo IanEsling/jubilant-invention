@@ -47,12 +47,6 @@ public class CommandExecutor {
     private Map<Item, Integer> applyOffers(Basket basket) {
         Map<Item, Integer> offerItems = new HashMap<>();
         offers.forEach(o -> offerItems.putAll(o.apply(basket)));
-//        int qualifyingSoup = basket.getItems().get(Items.SOUP) / 2;
-//        for (int i = 0; i < basket.getItems().get(Items.BREAD) && i < qualifyingSoup; i++) {
-//            offerItems.merge(Item.item("SoupOffer", Items.BREAD.getCost().multiply(BigDecimal.valueOf(-0.5d))),
-//                    1,
-//                    Integer::sum);
-//        }
         offerItems.putAll(basket.getItems());
         return offerItems;
     }

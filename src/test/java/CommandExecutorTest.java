@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,7 @@ class CommandExecutorTest {
         CommandExecutor testee = new CommandExecutor(Items.of(Item.item("Single", x2cost)));
         testee.addToBasket(2, "Single");
         BigDecimal price = testee.priceBasket();
-        assertThat(price).isEqualTo(BigDecimal.valueOf(x2cost * 2));
+        assertThat(price).isEqualTo(BigDecimal.valueOf(x2cost * 2).setScale(2, RoundingMode.HALF_UP));
     }
 
     @Test

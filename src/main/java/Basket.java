@@ -8,8 +8,9 @@ public class Basket {
         return items;
     }
 
-    public void addItem(int quantity, Item item) {
+    public Basket addItem(int quantity, Item item) {
         items.merge(item, quantity, Integer::sum);
+        return this;
     }
 
     public void clearItems(){
