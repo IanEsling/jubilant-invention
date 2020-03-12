@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class Buy2GetHalfOffOffer implements Function<Basket, Map<Item, Integer>> {
+public class Buy2GetHalfOffOffer implements Offer {
 
     public static final String OFFER_ITEM_NAME = "Buy2Offer";
 

@@ -2,7 +2,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.function.Function;
 
-public class PercentageDiscountOffer implements Function<Basket, Map<Item, Integer>> {
+public class PercentageDiscountOffer implements Offer {
     public static final String OFFER_ITEM_NAME = "PercentageDiscount";
 
     private final Item discountedItem;

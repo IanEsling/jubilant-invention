@@ -2,16 +2,17 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
+import java.time.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CommandExecutorTest {
+
+    private final Clock clock = Clock.fixed(Instant.from(OffsetDateTime.now().minusDays(1)), ZoneId.systemDefault());
 
     private final Item item1 = Item.item("1", 12.34);
     private final Item item2 = Item.item("2", 56.78);
@@ -19,9 +20,13 @@ class CommandExecutorTest {
     private final Items items = Items.of(item1, item2, item3);
 
     @Test
-    void getApplicationDate() {
-        var testee = CommandExecutor.forItems(items);
-        assertThat(testee.getDate()).isEqualTo(LocalDate.now());
+    void changeApplicationDate() {
+
+        var testee = CommandExecutor.forItems(items, clock);
+        assertThat(testee.getDate()).isEqualTo(LocalDate.now(clock));
+        Clock newClock = Clock.fixed(Instant.from(OffsetDateTime.now().plusDays(10)), ZoneId.systemDefault());
+        testee.setDate(newClock);
+        assertThat(testee.getDate()).isEqualTo(LocalDate.now(newClock));
     }
 
     @Test
@@ -101,9 +106,9 @@ class CommandExecutorTest {
     @Test
     void applySpecialOffer() {
         BigDecimal offerValue = BigDecimal.valueOf(-2.5);
-        Function<Basket, Map<Item, Integer>> offer = (b) -> Map.of(Item.item("offer", offerValue), 1);
+        Offer offer = (b) -> Map.of(Item.item("offer", offerValue), 1);
         var withoutOffer = CommandExecutor.forItems(items);
-        var withOffer = CommandExecutor.forItemsAndOffers(items, List.of(offer));
+        var withOffer = CommandExecutor.forItemsAndOffers(items, offer);
         List.of(withOffer, withoutOffer).forEach(ce -> {
             ce.addToBasket(2, item1.getName());
             ce.addToBasket(3, item2.getName());
@@ -117,12 +122,12 @@ class CommandExecutorTest {
         BigDecimal offer1Value = BigDecimal.valueOf(-2.5);
         BigDecimal offer2Value = BigDecimal.valueOf(-20.5);
         BigDecimal offer3Value = BigDecimal.valueOf(-200.5);
-        Function<Basket, Map<Item, Integer>> offer1 = (b) -> Map.of(Item.item("offer1", offer1Value), 1);
-        Function<Basket, Map<Item, Integer>> offer2 = (b) -> Map.of(Item.item("offer2", offer2Value), 1);
-        Function<Basket, Map<Item, Integer>> offer3 = (b) -> Map.of(Item.item("offer3", offer3Value), 1);
+        Offer offer1 = (b) -> Map.of(Item.item("offer1", offer1Value), 1);
+        Offer offer2 = (b) -> Map.of(Item.item("offer2", offer2Value), 1);
+        Offer offer3 = (b) -> Map.of(Item.item("offer3", offer3Value), 1);
 
         var withoutOffer = CommandExecutor.forItems(items);
-        var withOffer = CommandExecutor.forItemsAndOffers(items, List.of(offer1, offer2, offer3));
+        var withOffer = CommandExecutor.forItemsAndOffers(items, offer1, offer2, offer3);
         List.of(withOffer, withoutOffer).forEach(ce -> {
             ce.addToBasket(2, item1.getName());
             ce.addToBasket(3, item2.getName());
