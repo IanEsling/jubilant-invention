@@ -62,23 +62,25 @@ class CommandExecutorTest {
 
     @Test
     void calculatePriceOfBasketWithSingleItem() {
-        CommandExecutor testee = new CommandExecutor(Items.of(Item.item("Single", 987.65)));
+        double x2cost = 987.65;
+        CommandExecutor testee = new CommandExecutor(Items.of(Item.item("Single", x2cost)));
         testee.addToBasket(2, "Single");
         BigDecimal price = testee.priceBasket();
-        assertThat(price).isEqualTo(new BigDecimal("1975.30"));
+        assertThat(price).isEqualTo(BigDecimal.valueOf(x2cost * 2));
     }
 
     @Test
     void calculatePriceOfBasketWithMultipleItems() {
         String times2 = "x2", times3 = "x3", times4 = "x4";
-        CommandExecutor testee = new CommandExecutor(Items.of(Item.item(times2, 123.45),
-                Item.item(times3, 678.90),
-                Item.item(times4, 33.33)));
+        double x2cost = 123.45, x3cost = 678.90, x4cost = 33.33;
+        CommandExecutor testee = new CommandExecutor(Items.of(Item.item(times2, x2cost),
+                Item.item(times3, x3cost),
+                Item.item(times4, x4cost)));
         testee.addToBasket(2, times2);
         testee.addToBasket(3, times3);
         testee.addToBasket(4, times4);
         BigDecimal price = testee.priceBasket();
-        assertThat(price).isEqualTo(new BigDecimal("2416.92"));
+        assertThat(price).isEqualTo(BigDecimal.valueOf(x2cost * 2 + x3cost * 3 + x4cost * 4));
     }
 
     @Test
@@ -87,12 +89,34 @@ class CommandExecutorTest {
         Function<Basket, Map<Item, Integer>> offer = (b) -> Map.of(Item.item("offer", offerValue), 1);
         var withoutOffer = new CommandExecutor(items);
         var withOffer = new CommandExecutor(items, List.of(offer));
-        withoutOffer.addToBasket(2, item1.getName());
-        withoutOffer.addToBasket(3, item2.getName());
-        withoutOffer.addToBasket(4, item3.getName());
-        withOffer.addToBasket(2, item1.getName());
-        withOffer.addToBasket(3, item2.getName());
-        withOffer.addToBasket(4, item3.getName());
+        List.of(withOffer, withoutOffer).forEach(ce -> {
+            ce.addToBasket(2, item1.getName());
+            ce.addToBasket(3, item2.getName());
+            ce.addToBasket(4, item3.getName());
+        });
         assertThat(withOffer.priceBasket()).isEqualTo(withoutOffer.priceBasket().add(offerValue));
+    }
+
+    @Test
+    void applyMultipleSpecialOffer() {
+        BigDecimal offer1Value = BigDecimal.valueOf(-2.5);
+        BigDecimal offer2Value = BigDecimal.valueOf(-20.5);
+        BigDecimal offer3Value = BigDecimal.valueOf(-200.5);
+        Function<Basket, Map<Item, Integer>> offer1 = (b) -> Map.of(Item.item("offer1", offer1Value), 1);
+        Function<Basket, Map<Item, Integer>> offer2 = (b) -> Map.of(Item.item("offer2", offer2Value), 1);
+        Function<Basket, Map<Item, Integer>> offer3 = (b) -> Map.of(Item.item("offer3", offer3Value), 1);
+
+        var withoutOffer = new CommandExecutor(items);
+        var withOffer = new CommandExecutor(items, List.of(offer1, offer2, offer3));
+        List.of(withOffer, withoutOffer).forEach(ce -> {
+            ce.addToBasket(2, item1.getName());
+            ce.addToBasket(3, item2.getName());
+            ce.addToBasket(4, item3.getName());
+        });
+
+        assertThat(withOffer.priceBasket()).isEqualTo(withoutOffer.priceBasket()
+                .add(offer1Value)
+                .add(offer2Value)
+                .add(offer3Value));
     }
 }
