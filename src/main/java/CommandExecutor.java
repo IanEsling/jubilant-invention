@@ -1,18 +1,24 @@
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class CommandExecutor {
 
     private final Items items;
     private final Basket basket;
+    private Collection<Function<Basket, Map<Item, Integer>>> offers;
 
     public CommandExecutor(Items items) {
+        this(items, List.of());
+    }
+
+    public CommandExecutor(Items items, Collection<Function<Basket, Map<Item, Integer>>> offers) {
 
         this.items = Objects.requireNonNull(items);
         if (items.getItems().size() == 0) throw new UnsupportedOperationException("need at least one item available");
-        basket = new Basket();
+        this.offers = offers;
+        this.basket = new Basket();
     }
 
     public Collection<Item> listItems() {
@@ -33,9 +39,22 @@ public class CommandExecutor {
     }
 
     public BigDecimal priceBasket() {
-        return basket.getItems().entrySet().stream()
+        return applyOffers(basket).entrySet().stream()
                 .flatMap(e -> Stream.of(e.getKey().getCost().multiply(BigDecimal.valueOf(e.getValue()))))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private Map<Item, Integer> applyOffers(Basket basket) {
+        Map<Item, Integer> offerItems = new HashMap<>();
+        offers.forEach(o -> offerItems.putAll(o.apply(basket)));
+//        int qualifyingSoup = basket.getItems().get(Items.SOUP) / 2;
+//        for (int i = 0; i < basket.getItems().get(Items.BREAD) && i < qualifyingSoup; i++) {
+//            offerItems.merge(Item.item("SoupOffer", Items.BREAD.getCost().multiply(BigDecimal.valueOf(-0.5d))),
+//                    1,
+//                    Integer::sum);
+//        }
+        offerItems.putAll(basket.getItems());
+        return offerItems;
     }
 
 }

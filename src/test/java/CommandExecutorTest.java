@@ -3,6 +3,8 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -77,5 +79,20 @@ class CommandExecutorTest {
         testee.addToBasket(4, times4);
         BigDecimal price = testee.priceBasket();
         assertThat(price).isEqualTo(new BigDecimal("2416.92"));
+    }
+
+    @Test
+    void applySpecialOffer() {
+        BigDecimal offerValue = BigDecimal.valueOf(-2.5);
+        Function<Basket, Map<Item, Integer>> offer = (b) -> Map.of(Item.item("offer", offerValue), 1);
+        var withoutOffer = new CommandExecutor(items);
+        var withOffer = new CommandExecutor(items, List.of(offer));
+        withoutOffer.addToBasket(2, item1.getName());
+        withoutOffer.addToBasket(3, item2.getName());
+        withoutOffer.addToBasket(4, item3.getName());
+        withOffer.addToBasket(2, item1.getName());
+        withOffer.addToBasket(3, item2.getName());
+        withOffer.addToBasket(4, item3.getName());
+        assertThat(withOffer.priceBasket()).isEqualTo(withoutOffer.priceBasket().add(offerValue));
     }
 }

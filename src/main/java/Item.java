@@ -24,6 +24,10 @@ public class Item {
         return new Item(name, cost);
     }
 
+    public static Item item(String name, BigDecimal cost) {
+        return new Item(name, cost);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

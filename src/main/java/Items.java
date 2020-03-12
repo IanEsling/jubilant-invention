@@ -4,13 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 public class Items {
+    public static final Item SOUP = new Item("soup", 0.65d);
+    public static final Item BREAD = new Item("bread", 0.80d);
+    public static final Item MILK = new Item("milk", 1.30d);
+    public static final Item APPLES = new Item("apples", 0.10d);
     private final Collection<Item> items;
 
     public Items() {
-        this(List.of(new Item("soup", 0.65d),
-                new Item("bread", 0.80),
-                new Item("milk", 1.30),
-                new Item("apples", 0.10)));
+        this(List.of(SOUP, BREAD, MILK, APPLES));
     }
 
     public Items(Collection<Item> items) {
