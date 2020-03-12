@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -14,11 +15,16 @@ public class CommandExecutor {
     }
 
     public CommandExecutor(Items items, Collection<Function<Basket, Map<Item, Integer>>> offers) {
-
         this.items = Objects.requireNonNull(items);
         if (items.getItems().size() == 0) throw new UnsupportedOperationException("need at least one item available");
         this.offers = offers;
         this.basket = new Basket();
+    }
+
+    public static CommandExecutor liveDataExecutor() {
+        return new CommandExecutor(new Items(), List.of(
+                PercentageDiscountOffer.buildOffer(Items.APPLES, 10),
+                new Buy2GetHalfOffOffer(Items.SOUP, Items.BREAD)));
     }
 
     public Collection<Item> listItems() {
@@ -26,8 +32,9 @@ public class CommandExecutor {
     }
 
     public void addToBasket(int quantity, String itemName) {
-        basket.addItem(quantity,
-                items.getItemByName(itemName).orElseThrow(() -> new UnknownItemException(itemName)));
+            basket.addItem(quantity,
+                    items.getItemByName(itemName)
+                            .orElseThrow(() -> new UnknownItemException(itemName)));
     }
 
     public Basket getBasket() {
@@ -41,7 +48,8 @@ public class CommandExecutor {
     public BigDecimal priceBasket() {
         return applyOffers(basket).entrySet().stream()
                 .flatMap(e -> Stream.of(e.getKey().getCost().multiply(BigDecimal.valueOf(e.getValue()))))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     private Map<Item, Integer> applyOffers(Basket basket) {

@@ -9,11 +9,15 @@ public class Basket {
     }
 
     public Basket addItem(int quantity, Item item) {
-        items.merge(item, quantity, Integer::sum);
-        return this;
+        if (quantity > 0) {
+            items.merge(item, quantity, Integer::sum);
+            return this;
+        } else {
+            throw new UnsupportedOperationException("cannot add less than one item to basket");
+        }
     }
 
-    public void clearItems(){
+    public void clearItems() {
         items.clear();
     }
 }

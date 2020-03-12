@@ -17,11 +17,14 @@ public class Buy2GetHalfOffOffer implements Function<Basket, Map<Item, Integer>>
     @Override
     public Map<Item, Integer> apply(Basket basket) {
         Map<Item, Integer> offerItems = new HashMap<>();
-        int noOfQualifyingPairs = basket.getItems().get(buy2Item) / 2;
-        int noOfHalfOffItems = basket.getItems().get(halfOffItem);
-        if (noOfHalfOffItems > 0 && noOfQualifyingPairs > 0) {
-            offerItems.put(Item.item(OFFER_ITEM_NAME, halfOffItem.getCost().multiply(BigDecimal.valueOf(-0.5d))),
-                    Math.min(noOfHalfOffItems, noOfQualifyingPairs));
+        if (basket.getItems().containsKey(buy2Item) &&
+                basket.getItems().containsKey(halfOffItem)) {
+            int noOfQualifyingPairs = basket.getItems().get(buy2Item) / 2;
+            int noOfHalfOffItems = basket.getItems().get(halfOffItem);
+            if (noOfHalfOffItems > 0 && noOfQualifyingPairs > 0) {
+                offerItems.put(Item.item(OFFER_ITEM_NAME, halfOffItem.getCost().multiply(BigDecimal.valueOf(-0.5d))),
+                        Math.min(noOfHalfOffItems, noOfQualifyingPairs));
+            }
         }
         return offerItems;
     }

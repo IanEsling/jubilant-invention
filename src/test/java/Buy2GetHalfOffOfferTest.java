@@ -12,6 +12,11 @@ class Buy2GetHalfOffOfferTest {
     Item getHalfOffOfferItem = Item.item("halfOff", HALF_OFF_ITEM_COST);
 
     @Test
+    void nothingTerribleHappensIfHalfOffItemNotPresent() {
+        assertOffers(0, 1, Map.of());
+    }
+
+    @Test
     void expectedOffersForQuantitiesOfOfferItems() {
         assertOffers(1, 1, Map.of());
         assertOffers(2, 1, Map.of(Item.item(Buy2GetHalfOffOffer.OFFER_ITEM_NAME, HALF_OFF_ITEM_DISCOUNT), 1));
@@ -28,9 +33,13 @@ class Buy2GetHalfOffOfferTest {
     private void assertOffers(int quantityBuy2OfferItems,
                               int quantityHalfOffOfferItems,
                               Map<Item, Integer> expectedOffers) {
-        var basket = new Basket()
-                .addItem(quantityBuy2OfferItems, buy2OfferItem)
-                .addItem(quantityHalfOffOfferItems, getHalfOffOfferItem);
+        var basket = new Basket();
+        if (quantityBuy2OfferItems > 0) {
+            basket.addItem(quantityBuy2OfferItems, buy2OfferItem);
+        }
+        if (quantityHalfOffOfferItems > 0) {
+            basket.addItem(quantityHalfOffOfferItems, getHalfOffOfferItem);
+        }
         var offer = new Buy2GetHalfOffOffer(buy2OfferItem, getHalfOffOfferItem);
 
         assertThat(offer.apply(basket)).containsExactlyInAnyOrderEntriesOf(expectedOffers);

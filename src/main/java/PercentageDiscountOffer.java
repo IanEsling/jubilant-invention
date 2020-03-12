@@ -1,3 +1,5 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -20,7 +22,10 @@ public class PercentageDiscountOffer implements Function<Basket, Map<Item, Integ
     @Override
     public Map<Item, Integer> apply(Basket basket) {
         if (basket.getItems().containsKey(discountedItem)) {
-            return Map.of(Item.item(OFFER_ITEM_NAME, -percentageDiscount / 100d), basket.getItems().get(discountedItem));
+            return Map.of(Item.item(OFFER_ITEM_NAME,
+                    discountedItem.getCost().multiply(BigDecimal.valueOf(-percentageDiscount / 100d))
+                            .setScale(2, RoundingMode.HALF_UP)),
+                    basket.getItems().get(discountedItem));
         } else {
             return Map.of();
         }

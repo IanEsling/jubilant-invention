@@ -52,6 +52,13 @@ class CommandExecutorTest {
     }
 
     @Test
+    void throwIfTryToAddLessThan1ItemNameToBasket() {
+        CommandExecutor testee = new CommandExecutor(items);
+        assertThrows(UnsupportedOperationException.class, () -> testee.addToBasket(0, "1"));
+        assertThrows(UnsupportedOperationException.class, () -> testee.addToBasket(-10, "1"));
+    }
+
+    @Test
     void clearBasket() {
         CommandExecutor testee = new CommandExecutor(items);
         testee.addToBasket(2, "1");
