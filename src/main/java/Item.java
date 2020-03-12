@@ -12,12 +12,13 @@ public class Item {
     }
 
     public Item(String name, double cost) {
-        this(name, BigDecimal.valueOf(cost).setScale(2, RoundingMode.HALF_UP));
+        this(name, BigDecimal.valueOf(cost));
     }
 
     public Item(String name, BigDecimal cost) {
         this.name = Objects.requireNonNull(name);
-        this.cost = Objects.requireNonNull(cost);
+        this.cost = Objects.requireNonNull(cost)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     public static Item item(String name, double cost) {
