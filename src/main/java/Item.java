@@ -28,24 +28,25 @@ public class Item {
         return new Item(name, cost);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Item item = (Item) o;
-        return Objects.equals(name, item.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
-
     public BigDecimal getCost() {
         return cost;
     }
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return name.equals(item.name) &&
+                cost.doubleValue() == item.cost.doubleValue();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, cost.doubleValue());
     }
 }

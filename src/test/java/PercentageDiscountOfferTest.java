@@ -1,0 +1,38 @@
+import org.junit.jupiter.api.Test;
+
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class PercentageDiscountOfferTest {
+
+    public static final double DISCOUNT_ITEM_COST = 123.45;
+    Item discountItem = Item.item("discount", DISCOUNT_ITEM_COST);
+
+    @Test
+    void expectedOffersForQuantitiesOfOfferItems() {
+        assertOffers(1, 10);
+        assertOffers(2, 10);
+        assertOffers(2, 20);
+        assertOffers(6, 16);
+        assertOffers(3, 1);
+        assertOffers(20, 99);
+    }
+
+    @Test
+    void throwIfPercentageDiscountNotBetween1And99(){
+        assertThrows(UnsupportedOperationException.class, () -> PercentageDiscountOffer.buildOffer(discountItem, 0));
+        assertThrows(UnsupportedOperationException.class, () -> PercentageDiscountOffer.buildOffer(discountItem, 100));
+        PercentageDiscountOffer.buildOffer(discountItem, 1);
+        PercentageDiscountOffer.buildOffer(discountItem, 99);
+    }
+
+    private void assertOffers(int quantityDiscountItems,
+                              int percentageDiscount) {
+        var basket = new Basket().addItem(quantityDiscountItems, discountItem);
+        var offer = PercentageDiscountOffer.buildOffer(discountItem, percentageDiscount);
+        var expectedOffers = Map.of(Item.item(PercentageDiscountOffer.OFFER_ITEM_NAME, -percentageDiscount / 100d), quantityDiscountItems);
+        assertThat(offer.apply(basket)).containsExactlyInAnyOrderEntriesOf(expectedOffers);
+    }
+}

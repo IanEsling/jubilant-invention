@@ -35,14 +35,14 @@ class CommandExecutorTest {
         testee.addToBasket(2, "1");
         Basket basket = testee.getBasket();
         assertThat(basket.getItems()).hasSize(1);
-        assertThat(basket.getItems().get(new Item("1"))).isEqualTo(2);
+        assertThat(basket.getItems().get(item1)).isEqualTo(2);
         testee.addToBasket(3, "1");
         assertThat(basket.getItems()).hasSize(1);
-        assertThat(basket.getItems().get(new Item("1"))).isEqualTo(5);
+        assertThat(basket.getItems().get(item1)).isEqualTo(5);
         testee.addToBasket(4, "2");
         assertThat(basket.getItems()).hasSize(2);
-        assertThat(basket.getItems().get(new Item("1"))).isEqualTo(5);
-        assertThat(basket.getItems().get(new Item("2"))).isEqualTo(4);
+        assertThat(basket.getItems().get(item1)).isEqualTo(5);
+        assertThat(basket.getItems().get(item2)).isEqualTo(4);
     }
 
     @Test

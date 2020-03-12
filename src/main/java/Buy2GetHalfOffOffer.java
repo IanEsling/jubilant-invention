@@ -19,10 +19,9 @@ public class Buy2GetHalfOffOffer implements Function<Basket, Map<Item, Integer>>
         Map<Item, Integer> offerItems = new HashMap<>();
         int noOfQualifyingPairs = basket.getItems().get(buy2Item) / 2;
         int noOfHalfOffItems = basket.getItems().get(halfOffItem);
-        for (int i = 0; i < noOfHalfOffItems && i < noOfQualifyingPairs; i++) {
-            offerItems.merge(Item.item(OFFER_ITEM_NAME, halfOffItem.getCost().multiply(BigDecimal.valueOf(-0.5d))),
-                    1,
-                    Integer::sum);
+        if (noOfHalfOffItems > 0 && noOfQualifyingPairs > 0) {
+            offerItems.put(Item.item(OFFER_ITEM_NAME, halfOffItem.getCost().multiply(BigDecimal.valueOf(-0.5d))),
+                    Math.min(noOfHalfOffItems, noOfQualifyingPairs));
         }
         return offerItems;
     }
