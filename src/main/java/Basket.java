@@ -20,4 +20,11 @@ public class Basket {
     public void clearItems() {
         items.clear();
     }
+
+    @Override
+    public String toString() {
+        return "Basket{" +
+                "items=" + items +
+                '}';
+    }
 }

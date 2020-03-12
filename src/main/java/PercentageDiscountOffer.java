@@ -4,6 +4,7 @@ import java.util.function.Function;
 
 public class PercentageDiscountOffer implements Function<Basket, Map<Item, Integer>> {
     public static final String OFFER_ITEM_NAME = "PercentageDiscount";
+
     private final Item discountedItem;
     private int percentageDiscount;
 
@@ -27,5 +28,13 @@ public class PercentageDiscountOffer implements Function<Basket, Map<Item, Integ
         } else {
             return Map.of();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "PercentageDiscountOffer{" +
+                "discountedItem=" + discountedItem +
+                ", percentageDiscount=" + percentageDiscount +
+                '}';
     }
 }

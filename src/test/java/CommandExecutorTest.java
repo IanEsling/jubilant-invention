@@ -2,6 +2,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -15,23 +16,29 @@ class CommandExecutorTest {
     private final Item item1 = Item.item("1", 12.34);
     private final Item item2 = Item.item("2", 56.78);
     private final Item item3 = Item.item("3", 90.12);
-    private Items items = Items.of(item1, item2, item3);
+    private final Items items = Items.of(item1, item2, item3);
+
+    @Test
+    void getApplicationDate() {
+        var testee = CommandExecutor.forItems(items);
+        assertThat(testee.getDate()).isEqualTo(LocalDate.now());
+    }
 
     @Test
     void listItems() {
-        Collection<Item> items = new CommandExecutor(this.items).listItems();
-        assertThat(items).containsExactlyInAnyOrderElementsOf(this.items.getItems());
+        Collection<Item> listedItems = CommandExecutor.forItems(items).listItems();
+        assertThat(listedItems).containsExactlyInAnyOrderElementsOf(items.getItems());
     }
 
     @Test
     void throwIfNoItemsToBeSupplied() {
-        assertThrows(NullPointerException.class, () -> new CommandExecutor(null));
-        assertThrows(UnsupportedOperationException.class, () -> new CommandExecutor(new Items(List.of())));
+        assertThrows(UnsupportedOperationException.class, () -> CommandExecutor.forItems(null));
+        assertThrows(UnsupportedOperationException.class, () -> CommandExecutor.forItems(Items.of()));
     }
 
     @Test
     void addItemsToBasket() {
-        CommandExecutor testee = new CommandExecutor(items);
+        CommandExecutor testee = CommandExecutor.forItems(items);
         testee.addToBasket(2, "1");
         Basket basket = testee.getBasket();
         assertThat(basket.getItems()).hasSize(1);
@@ -47,20 +54,20 @@ class CommandExecutorTest {
 
     @Test
     void throwIfTryToAddUnknownItemNameToBasket() {
-        CommandExecutor testee = new CommandExecutor(items);
+        CommandExecutor testee = CommandExecutor.forItems(items);
         assertThrows(UnknownItemException.class, () -> testee.addToBasket(2, "Unknown"));
     }
 
     @Test
     void throwIfTryToAddLessThan1ItemNameToBasket() {
-        CommandExecutor testee = new CommandExecutor(items);
+        CommandExecutor testee = CommandExecutor.forItems(items);
         assertThrows(UnsupportedOperationException.class, () -> testee.addToBasket(0, "1"));
         assertThrows(UnsupportedOperationException.class, () -> testee.addToBasket(-10, "1"));
     }
 
     @Test
     void clearBasket() {
-        CommandExecutor testee = new CommandExecutor(items);
+        CommandExecutor testee = CommandExecutor.forItems(items);
         testee.addToBasket(2, "1");
         Basket basket = testee.getBasket();
         assertThat(basket.getItems()).hasSize(1);
@@ -71,7 +78,7 @@ class CommandExecutorTest {
     @Test
     void calculatePriceOfBasketWithSingleItem() {
         double x2cost = 987.65;
-        CommandExecutor testee = new CommandExecutor(Items.of(Item.item("Single", x2cost)));
+        CommandExecutor testee = CommandExecutor.forItems(Items.of(Item.item("Single", x2cost)));
         testee.addToBasket(2, "Single");
         BigDecimal price = testee.priceBasket();
         assertThat(price).isEqualTo(BigDecimal.valueOf(x2cost * 2).setScale(2, RoundingMode.HALF_UP));
@@ -81,7 +88,7 @@ class CommandExecutorTest {
     void calculatePriceOfBasketWithMultipleItems() {
         String times2 = "x2", times3 = "x3", times4 = "x4";
         double x2cost = 123.45, x3cost = 678.90, x4cost = 33.33;
-        CommandExecutor testee = new CommandExecutor(Items.of(Item.item(times2, x2cost),
+        CommandExecutor testee = CommandExecutor.forItems(Items.of(Item.item(times2, x2cost),
                 Item.item(times3, x3cost),
                 Item.item(times4, x4cost)));
         testee.addToBasket(2, times2);
@@ -95,8 +102,8 @@ class CommandExecutorTest {
     void applySpecialOffer() {
         BigDecimal offerValue = BigDecimal.valueOf(-2.5);
         Function<Basket, Map<Item, Integer>> offer = (b) -> Map.of(Item.item("offer", offerValue), 1);
-        var withoutOffer = new CommandExecutor(items);
-        var withOffer = new CommandExecutor(items, List.of(offer));
+        var withoutOffer = CommandExecutor.forItems(items);
+        var withOffer = CommandExecutor.forItemsAndOffers(items, List.of(offer));
         List.of(withOffer, withoutOffer).forEach(ce -> {
             ce.addToBasket(2, item1.getName());
             ce.addToBasket(3, item2.getName());
@@ -114,8 +121,8 @@ class CommandExecutorTest {
         Function<Basket, Map<Item, Integer>> offer2 = (b) -> Map.of(Item.item("offer2", offer2Value), 1);
         Function<Basket, Map<Item, Integer>> offer3 = (b) -> Map.of(Item.item("offer3", offer3Value), 1);
 
-        var withoutOffer = new CommandExecutor(items);
-        var withOffer = new CommandExecutor(items, List.of(offer1, offer2, offer3));
+        var withoutOffer = CommandExecutor.forItems(items);
+        var withOffer = CommandExecutor.forItemsAndOffers(items, List.of(offer1, offer2, offer3));
         List.of(withOffer, withoutOffer).forEach(ce -> {
             ce.addToBasket(2, item1.getName());
             ce.addToBasket(3, item2.getName());

@@ -6,12 +6,20 @@ import java.util.function.Function;
 public class Buy2GetHalfOffOffer implements Function<Basket, Map<Item, Integer>> {
 
     public static final String OFFER_ITEM_NAME = "Buy2Offer";
+
     private final Item buy2Item;
     private final Item halfOffItem;
 
-    public Buy2GetHalfOffOffer(Item buy2Item, Item halfOffItem) {
+    private Buy2GetHalfOffOffer(Item buy2Item, Item halfOffItem) {
         this.buy2Item = buy2Item;
         this.halfOffItem = halfOffItem;
+    }
+
+    public static Buy2GetHalfOffOffer forItems(Item buy2Item, Item halfOffItem) {
+        if (buy2Item == null || halfOffItem == null) {
+            throw new UnsupportedOperationException("need 2 items to create offer, got: " + buy2Item + ", " + halfOffItem);
+        }
+        return new Buy2GetHalfOffOffer(buy2Item, halfOffItem);
     }
 
     @Override
@@ -27,5 +35,13 @@ public class Buy2GetHalfOffOffer implements Function<Basket, Map<Item, Integer>>
             }
         }
         return offerItems;
+    }
+
+    @Override
+    public String toString() {
+        return "Buy2GetHalfOffOffer{" +
+                "buy2Item=" + buy2Item +
+                ", halfOffItem=" + halfOffItem +
+                '}';
     }
 }

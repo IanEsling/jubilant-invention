@@ -7,15 +7,11 @@ public class Item {
     private final String name;
     private final BigDecimal cost;
 
-    public Item(String name) {
-        this(name, BigDecimal.ZERO);
-    }
-
-    public Item(String name, double cost) {
+    private Item(String name, double cost) {
         this(name, BigDecimal.valueOf(cost));
     }
 
-    public Item(String name, BigDecimal cost) {
+    private Item(String name, BigDecimal cost) {
         this.name = Objects.requireNonNull(name);
         this.cost = Objects.requireNonNull(cost)
                 .setScale(2, RoundingMode.HALF_UP);

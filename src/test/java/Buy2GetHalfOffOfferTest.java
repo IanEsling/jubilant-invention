@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class Buy2GetHalfOffOfferTest {
 
@@ -10,6 +11,12 @@ class Buy2GetHalfOffOfferTest {
     public static final double HALF_OFF_ITEM_DISCOUNT = -37.5;
     Item buy2OfferItem = Item.item("buy2", 123);
     Item getHalfOffOfferItem = Item.item("halfOff", HALF_OFF_ITEM_COST);
+
+    @Test
+    void cannotCreateOfferWithoutItems() {
+        assertThrows(UnsupportedOperationException.class, () -> Buy2GetHalfOffOffer.forItems(null, getHalfOffOfferItem));
+        assertThrows(UnsupportedOperationException.class, () -> Buy2GetHalfOffOffer.forItems(buy2OfferItem, null));
+    }
 
     @Test
     void nothingTerribleHappensIfHalfOffItemNotPresent() {
@@ -40,7 +47,7 @@ class Buy2GetHalfOffOfferTest {
         if (quantityHalfOffOfferItems > 0) {
             basket.addItem(quantityHalfOffOfferItems, getHalfOffOfferItem);
         }
-        var offer = new Buy2GetHalfOffOffer(buy2OfferItem, getHalfOffOfferItem);
+        var offer = Buy2GetHalfOffOffer.forItems(buy2OfferItem, getHalfOffOfferItem);
 
         assertThat(offer.apply(basket)).containsExactlyInAnyOrderEntriesOf(expectedOffers);
     }
