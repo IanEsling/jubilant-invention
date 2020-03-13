@@ -1,3 +1,7 @@
+import model.Basket;
+import model.Item;
+import model.Items;
+import model.Offer;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

@@ -1,3 +1,8 @@
+package model;
+
+import model.Basket;
+import model.Buy2GetHalfOffOffer;
+import model.Item;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

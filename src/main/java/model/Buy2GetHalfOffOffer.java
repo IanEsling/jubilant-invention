@@ -1,7 +1,8 @@
+package model;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 public class Buy2GetHalfOffOffer implements Offer {
 
@@ -39,7 +40,7 @@ public class Buy2GetHalfOffOffer implements Offer {
 
     @Override
     public String toString() {
-        return "Buy2GetHalfOffOffer{" +
+        return "model.Buy2GetHalfOffOffer{" +
                 "buy2Item=" + buy2Item +
                 ", halfOffItem=" + halfOffItem +
                 '}';

@@ -1,3 +1,8 @@
+import model.Basket;
+import model.Item;
+import model.Items;
+import model.Offer;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Clock;

@@ -1,3 +1,5 @@
+package model;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +25,7 @@ public class Basket {
 
     @Override
     public String toString() {
-        return "Basket{" +
+        return "model.Basket{" +
                 "items=" + items +
                 '}';
     }

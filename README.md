@@ -6,7 +6,7 @@ A local shop, Henry’s Grocery, has asked you to author an IT solution for them
 
 Henry’s Grocery currently only stocks four items and has two promotions. These are as follows:
 
-### Stock Items
+### Stock model.Items
         
 |  **product** | **unit**   | **cost** |
 | :---  | :---: | :---: |

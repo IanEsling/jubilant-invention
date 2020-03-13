@@ -1,3 +1,8 @@
+import model.Buy2GetHalfOffOffer;
+import model.Items;
+import model.Offer;
+import model.PercentageDiscountOffer;
+
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;

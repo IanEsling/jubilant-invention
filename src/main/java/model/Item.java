@@ -1,3 +1,5 @@
+package model;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
@@ -49,7 +51,7 @@ public class Item {
 
     @Override
     public String toString() {
-        return "Item{" +
+        return "model.Item{" +
                 "name='" + name + '\'' +
                 ", cost=" + cost +
                 '}';

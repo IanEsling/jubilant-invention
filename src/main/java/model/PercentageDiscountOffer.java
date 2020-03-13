@@ -1,6 +1,7 @@
+package model;
+
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.function.Function;
 
 public class PercentageDiscountOffer implements Offer {
     public static final String OFFER_ITEM_NAME = "PercentageDiscount";
@@ -32,7 +33,7 @@ public class PercentageDiscountOffer implements Offer {
 
     @Override
     public String toString() {
-        return "PercentageDiscountOffer{" +
+        return "model.PercentageDiscountOffer{" +
                 "discountedItem=" + discountedItem +
                 ", percentageDiscount=" + percentageDiscount +
                 '}';
