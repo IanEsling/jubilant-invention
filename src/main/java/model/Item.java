@@ -8,23 +8,29 @@ public class Item {
 
     private final String name;
     private final BigDecimal cost;
+    private final String unit;
 
-    private Item(String name, double cost) {
-        this(name, BigDecimal.valueOf(cost));
+    private Item(String name, double cost, String unit) {
+        this(name, BigDecimal.valueOf(cost), unit);
     }
 
-    private Item(String name, BigDecimal cost) {
+    private Item(String name, BigDecimal cost, String unit) {
+        this.unit = unit;
         this.name = Objects.requireNonNull(name);
         this.cost = Objects.requireNonNull(cost)
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
     public static Item item(String name, double cost) {
-        return new Item(name, cost);
+        return new Item(name, cost, "unit");
+    }
+
+    public static Item item(String name, double cost, String unit) {
+        return new Item(name, cost, unit);
     }
 
     public static Item item(String name, BigDecimal cost) {
-        return new Item(name, cost);
+        return new Item(name, cost, "unit");
     }
 
     public BigDecimal getCost() {
@@ -33,6 +39,10 @@ public class Item {
 
     public String getName() {
         return name;
+    }
+
+    public String getUnit() {
+        return unit;
     }
 
     @Override

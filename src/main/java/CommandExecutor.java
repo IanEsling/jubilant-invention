@@ -1,102 +1,58 @@
-import model.Basket;
-import model.Item;
-import model.Items;
-import model.Offer;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.Clock;
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.io.PrintStream;
+import java.util.Arrays;
 
 public class CommandExecutor {
 
-    private final Items items;
-    private final Basket basket;
+    public static final String ITEM_LIST_START_MESSAGE = "Items available:";
+    public static final String ITEM_LIST_CONTENT_MESSAGE = "%s! 1 %s for %s";
+    public static final String ITEM_LIST_END_MESSAGE = "use the 'add quantity item-name' command to add to your basket.";
+    private final PrintStream output;
+    private final GroceryOperations groceryOperations;
 
-    private OfferScheduler offerScheduler;
-    private Clock clock;
+    public CommandExecutor(PrintStream output, GroceryOperations groceryOperations) {
 
-    private CommandExecutor(Items items,
-                            OfferScheduler offerScheduler,
-                            Clock clock) {
-        this.items = items;
-        this.offerScheduler = offerScheduler;
-        this.clock = clock;
-        this.basket = new Basket();
+        this.output = output;
+        this.groceryOperations = groceryOperations;
     }
 
-    public static CommandExecutor forItemsAndOffers(Items items, Offer... offers) {
-        return forItemsAndOffers(items, OfferScheduler.forOffers(offers), Clock.systemDefaultZone());
-    }
-
-    public static CommandExecutor forItemsAndOffers(Items items, OfferScheduler offers) {
-        return forItemsAndOffers(items, offers, Clock.systemDefaultZone());
-    }
-
-    public static CommandExecutor forItemsAndOffers(Items items, OfferScheduler offers,
-                                                    Clock clock) {
-        if (items == null || items.getItems() == null || items.getItems().size() == 0)
-            throw new UnsupportedOperationException("need at least one item available");
-        return new CommandExecutor(items, offers, clock);
-    }
-
-    public static CommandExecutor forItems(Items items) {
-        return forItemsAndOffers(items, OfferScheduler.empty(), Clock.systemDefaultZone());
-    }
-
-    public static CommandExecutor forItems(Items items, Clock clock) {
-        return forItemsAndOffers(items, OfferScheduler.empty(), clock);
+    public void execute(String[] input) {
+        Command.getCommandFor(this, input[0]).execute(this, input);
     }
 
 
-    public static CommandExecutor liveDataExecutor() {
+    enum Command {
+        List("list") {
+            @Override
+            void execute(CommandExecutor ce, String[] input) {
+                ce.output.println(ITEM_LIST_START_MESSAGE);
+                ce.groceryOperations.listItems().forEach(i ->
+                        ce.output.println(String.format(ITEM_LIST_CONTENT_MESSAGE, i.getName(), i.getUnit(), i.getCost().toString())));
+                ce.output.println(ITEM_LIST_END_MESSAGE);
+            }
+        },
+        Unknown("") {
+            @Override
+            void execute(CommandExecutor ce, String[] input) {
+                ce.output.println(String.format(HenrysGrocery.ERROR_MESSAGE, Arrays.toString(input)));
+                ce.output.println(HenrysGrocery.USAGE_MESSAGE);
+            }
+        };
 
-        return forItemsAndOffers(Items.liveItems(),
-                OfferScheduler.liveOffers());
+        private String commandFor;
+
+        Command(String commandFor) {
+            this.commandFor = commandFor;
+        }
+
+        static Command getCommandFor(CommandExecutor ce, String input) {
+            for (Command command : Command.values()) {
+                if (command.commandFor.equalsIgnoreCase(input)) return command;
+            }
+            return Unknown;
+        }
+
+        abstract void execute(CommandExecutor ce, String[] input);
+
     }
 
-    public Collection<Item> listItems() {
-        return items.getItems();
-    }
-
-    public void addToBasket(int quantity, String itemName) {
-        basket.addItem(quantity,
-                items.getItemByName(itemName)
-                        .orElseThrow(() -> new UnknownItemException(itemName)));
-    }
-
-    public Basket getBasket() {
-        return basket;
-    }
-
-    public void emptyBasket() {
-        basket.clearItems();
-    }
-
-    public LocalDate getDate() {
-        return LocalDate.now(clock);
-    }
-
-    public void setDate(Clock newClock) {
-        this.clock = newClock;
-    }
-
-    public BigDecimal priceBasket() {
-        return applyOffers(basket).entrySet().stream()
-                .flatMap(e -> Stream.of(e.getKey().getCost().multiply(BigDecimal.valueOf(e.getValue()))))
-                .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .setScale(2, RoundingMode.HALF_UP);
-    }
-
-    private Map<Item, Integer> applyOffers(Basket basket) {
-        Map<Item, Integer> offerItems = new HashMap<>();
-        offerScheduler.getOffersForDate(LocalDate.now(clock)).forEach(o -> offerItems.putAll(o.apply(basket)));
-
-        offerItems.putAll(basket.getItems());
-        return offerItems;
-    }
 }

@@ -1,0 +1,112 @@
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class HenrysGrocery {
+
+    public static final String QUIT_MESSAGE = "Goodbye, thanks for shopping at Henry's!";
+    public static final String USAGE_MESSAGE = "USAGE: " + System.lineSeparator() +
+            "list - list all items available" + System.lineSeparator() +
+            "add quantity item-name - adds the given number of items to your basket" + System.lineSeparator() +
+            "clear - removes everything from your basket" + System.lineSeparator() +
+            "price - calculates the price of the basket contents" + System.lineSeparator() +
+            "date - show the current date of the grocery" + System.lineSeparator() +
+            "setdate DD/MM/YYYY - set the date of the grocery" + System.lineSeparator() +
+            "Q - Quit the program";
+    public static final String ERROR_MESSAGE = "Error trying to process command %s.";
+    private final Scanner scanner;
+    private final PrintStream output;
+    private final GroceryOperations groceryOperations;
+    private boolean running = true;
+
+    public HenrysGrocery(InputStream input, PrintStream output) {
+        this(input, output, GroceryOperations.liveDataExecutor());
+    }
+
+    public HenrysGrocery(InputStream input,
+                         PrintStream output,
+                         GroceryOperations groceryOperations) {
+        this.scanner = new Scanner(input);
+        this.output = output;
+        this.groceryOperations = groceryOperations;
+    }
+
+    public static void main(String... args) {
+        printWelcome(System.out);
+        HenrysGrocery grocery = new HenrysGrocery(System.in, System.out);
+        grocery.run();
+    }
+
+    private static void printWelcome(PrintStream output) {
+        output.println("\n" +
+                "\n" +
+                " _   _                       _       _____                               \n" +
+                "| | | |                     ( )     |  __ \\                              \n" +
+                "| |_| | ___ _ __  _ __ _   _|/ ___  | |  \\/_ __ ___   ___ ___ _ __ _   _ \n" +
+                "|  _  |/ _ \\ '_ \\| '__| | | | / __| | | __| '__/ _ \\ / __/ _ \\ '__| | | |\n" +
+                "| | | |  __/ | | | |  | |_| | \\__ \\ | |_\\ \\ | | (_) | (_|  __/ |  | |_| |\n" +
+                "\\_| |_/\\___|_| |_|_|   \\__, | |___/  \\____/_|  \\___/ \\___\\___|_|   \\__, |\n" +
+                "                        __/ |                                       __/ |\n" +
+                "                       |___/                                       |___/ \n" +
+                "\n");
+        output.println(USAGE_MESSAGE);
+        output.println();
+        output.println();
+    }
+
+    public void run() {
+        run(() -> running);
+    }
+
+    public void run(KeepRunning keepRunning) {
+
+        while (keepRunning.keepRunning()) {
+            if (scanner.hasNextLine()) {
+
+                String[] input = scanner.nextLine().split(" ");
+
+                Command.getCommandFor(input[0]).execute(this, input);
+            }
+        }
+        output.println(QUIT_MESSAGE);
+    }
+
+    enum Command {
+        List("list") {
+            @Override
+            void execute(HenrysGrocery grocery, String[] input) {
+                grocery.output.println();
+                grocery.groceryOperations.listItems();
+            }
+        },
+        Unknown("") {
+            @Override
+            void execute(HenrysGrocery grocery, String[] input) {
+                grocery.output.println(String.format(ERROR_MESSAGE, Arrays.toString(input)));
+                grocery.output.println(USAGE_MESSAGE);
+            }
+        };
+
+        private String commandFor;
+
+        Command(String commandFor) {
+            this.commandFor = commandFor;
+        }
+
+        static Command getCommandFor(String input) {
+            for (Command command : Command.values()) {
+                if (command.commandFor.equalsIgnoreCase(input)) return command;
+            }
+            return Unknown;
+        }
+
+        abstract void execute(HenrysGrocery grocery, String[] input);
+
+    }
+
+    @FunctionalInterface
+    interface KeepRunning {
+        boolean keepRunning();
+    }
+}

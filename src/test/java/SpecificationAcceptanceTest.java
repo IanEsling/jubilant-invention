@@ -18,7 +18,7 @@ public class SpecificationAcceptanceTest {
      */
     @Test
     void test1() {
-        CommandExecutor testee = CommandExecutor.liveDataExecutor();
+        GroceryOperations testee = GroceryOperations.liveDataExecutor();
         testee.addToBasket(3, Items.SOUP.getName());
         testee.addToBasket(2, Items.BREAD.getName());
 
@@ -31,7 +31,7 @@ public class SpecificationAcceptanceTest {
      */
     @Test
     void test2() {
-        CommandExecutor testee = CommandExecutor.liveDataExecutor();
+        GroceryOperations testee = GroceryOperations.liveDataExecutor();
         testee.addToBasket(6, Items.APPLES.getName());
         testee.addToBasket(1, Items.MILK.getName());
 
@@ -44,7 +44,7 @@ public class SpecificationAcceptanceTest {
      */
     @Test
     void test3() {
-        CommandExecutor testee = CommandExecutor.liveDataExecutor();
+        GroceryOperations testee = GroceryOperations.liveDataExecutor();
         testee.addToBasket(6, Items.APPLES.getName());
         testee.addToBasket(1, Items.MILK.getName());
 
@@ -58,7 +58,7 @@ public class SpecificationAcceptanceTest {
      */
     @Test
     void test4() {
-        CommandExecutor testee = CommandExecutor.liveDataExecutor();
+        GroceryOperations testee = GroceryOperations.liveDataExecutor();
         testee.addToBasket(3, Items.APPLES.getName());
         testee.addToBasket(2, Items.SOUP.getName());
         testee.addToBasket(1, Items.BREAD.getName());
