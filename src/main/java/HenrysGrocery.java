@@ -39,6 +39,33 @@ public class HenrysGrocery {
         grocery.run();
     }
 
+    public void run() {
+        run(() -> true);
+    }
+
+    public void run(KeepRunning keepRunning) {
+
+        while (running && keepRunning.keepRunning()) {
+            if (scanner.hasNextLine()) {
+
+                String[] input = scanner.nextLine().split(" ");
+
+                try {
+                    running = commandExecutor.execute(input);
+                } catch (Exception e) {
+                    output.println(String.format(ERROR_MESSAGE, Arrays.toString(input)));
+                    output.println(USAGE_MESSAGE);
+                }
+            }
+        }
+        output.println(QUIT_MESSAGE);
+    }
+
+    @FunctionalInterface
+    interface KeepRunning {
+        boolean keepRunning();
+    }
+
     private static void printWelcome(PrintStream output) {
         output.println("\n" +
                 "\n" +
@@ -56,30 +83,4 @@ public class HenrysGrocery {
         output.println();
     }
 
-    public void run() {
-        run(() -> running);
-    }
-
-    public void run(KeepRunning keepRunning) {
-
-        while (keepRunning.keepRunning()) {
-            if (scanner.hasNextLine()) {
-
-                String[] input = scanner.nextLine().split(" ");
-
-                try {
-                    commandExecutor.execute(input);
-                } catch (Exception e) {
-                    output.println(String.format(ERROR_MESSAGE, Arrays.toString(input)));
-                    output.println(USAGE_MESSAGE);
-                }
-            }
-        }
-        output.println(QUIT_MESSAGE);
-    }
-
-    @FunctionalInterface
-    interface KeepRunning {
-        boolean keepRunning();
-    }
 }
