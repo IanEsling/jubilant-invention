@@ -8,6 +8,7 @@ public class HenrysGrocery {
     public static final String QUIT_MESSAGE = "Goodbye, thanks for shopping at Henry's!";
     public static final String USAGE_MESSAGE = "USAGE: " + System.lineSeparator() +
             "list - list all items available" + System.lineSeparator() +
+            "basket - list all items in your basket" + System.lineSeparator() +
             "add quantity item-name - adds the given number of items to your basket" + System.lineSeparator() +
             "clear - removes everything from your basket" + System.lineSeparator() +
             "price - calculates the price of the basket contents" + System.lineSeparator() +

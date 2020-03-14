@@ -11,9 +11,14 @@ public class CommandExecutor {
     public static final String BASKET_PRICE_MESSAGE = "total price = %s";
     public static final String DATE_MESSAGE = "today's date is %s";
     public static final String LIST_COMMAND = "list";
+    public static final String BASKET_COMMAND = "basket";
     public static final String PRICE_COMMAND = "price";
     public static final String DATE_COMMAND = "date";
     public static final String QUIT_COMMAND = "Q";
+    public static final String ADD_COMMAND = "add";
+    public static final String ITEM_ADDED_MESSAGE = "added to basket: %s %s";
+    public static final String BASKET_START_MESSAGE = "you have the following items in your basket:";
+    public static final String BASKET_CONTENT_MESSAGE = "%s: %s";
     private final PrintStream output;
     private final GroceryOperations groceryOperations;
 
@@ -35,6 +40,16 @@ public class CommandExecutor {
                 return false;
             }
         },
+        Add(ADD_COMMAND) {
+            @Override
+            boolean execute(CommandExecutor ce, String[] input) {
+                int quantity = Integer.parseInt(input[1]);
+                String itemName = input[2];
+                ce.groceryOperations.addToBasket(quantity, itemName);
+                ce.output.println(String.format(ITEM_ADDED_MESSAGE, quantity, itemName));
+                return true;
+            }
+        },
         List(LIST_COMMAND) {
             @Override
             boolean execute(CommandExecutor ce, String[] input) {
@@ -42,6 +57,15 @@ public class CommandExecutor {
                 ce.groceryOperations.listItems().forEach(i ->
                         ce.output.println(String.format(ITEM_LIST_CONTENT_MESSAGE, i.getName(), i.getUnit(), i.getCost().toString())));
                 ce.output.println(ITEM_LIST_END_MESSAGE);
+                return true;
+            }
+        },
+        Basket(BASKET_COMMAND) {
+            @Override
+            boolean execute(CommandExecutor ce, String[] input) {
+                ce.output.println(BASKET_START_MESSAGE);
+                ce.groceryOperations.getBasket().getItems().forEach((key, value) ->
+                        ce.output.println(String.format(BASKET_CONTENT_MESSAGE, key.getName(), value)));
                 return true;
             }
         },

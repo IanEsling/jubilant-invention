@@ -1,3 +1,5 @@
+import model.Basket;
+import model.Items;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,6 +28,16 @@ class CommandExecutorTest {
     CommandExecutor testee;
 
     @Test
+    void addItemToBasketCommand() {
+        var itemQuantity = "3";
+        var itemName = Items.SOUP.getName();
+        var keepRunning = testee.execute(new String[]{CommandExecutor.ADD_COMMAND, itemQuantity, itemName});
+
+        verify(output).println(String.format(CommandExecutor.ITEM_ADDED_MESSAGE, itemQuantity, itemName));
+        assertThat(keepRunning).isTrue();
+    }
+
+    @Test
     void listItemsCommand() {
         var items = List.of(item("1", 1),
                 item("2", 2),
@@ -36,6 +48,20 @@ class CommandExecutorTest {
         verify(output).println(CommandExecutor.ITEM_LIST_START_MESSAGE);
         items.forEach(i -> verify(output).println(String.format(CommandExecutor.ITEM_LIST_CONTENT_MESSAGE, i.getName(), i.getUnit(), i.getCost().toString())));
         verify(output).println(CommandExecutor.ITEM_LIST_END_MESSAGE);
+        assertThat(keepRunning).isTrue();
+    }
+
+    @Test
+    void basketCommand() {
+        var basket = new Basket();
+        basket.addItem(1, item("1", 1))
+                .addItem(2, item("2", 2))
+                .addItem(3, item("3", 3));
+
+        when(groceryOperations.getBasket()).thenReturn(basket);
+        var keepRunning = testee.execute(new String[]{CommandExecutor.BASKET_COMMAND});
+        verify(output).println(CommandExecutor.BASKET_START_MESSAGE);
+        basket.getItems().forEach((key, value) -> verify(output).println(String.format(CommandExecutor.BASKET_CONTENT_MESSAGE, key.getName(), value)));
         assertThat(keepRunning).isTrue();
     }
 
