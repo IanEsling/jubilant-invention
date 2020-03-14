@@ -1,4 +1,5 @@
 import java.io.PrintStream;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 public class CommandExecutor {
@@ -19,6 +20,9 @@ public class CommandExecutor {
     public static final String ITEM_ADDED_MESSAGE = "added to basket: %s %s";
     public static final String BASKET_START_MESSAGE = "you have the following items in your basket:";
     public static final String BASKET_CONTENT_MESSAGE = "%s: %s";
+    public static final String CLEAR_COMMAND = "clear";
+    public static final String BASKET_CLEAR_MESSAGE = "your basket has been emptied.";
+    public static final String SET_DATE_COMMAND = "setdate";
     private final PrintStream output;
     private final GroceryOperations groceryOperations;
 
@@ -60,6 +64,14 @@ public class CommandExecutor {
                 return true;
             }
         },
+        Clear(CLEAR_COMMAND) {
+            @Override
+            boolean execute(CommandExecutor ce, String[] input) {
+                ce.groceryOperations.getBasket().clearItems();
+                ce.output.println(BASKET_CLEAR_MESSAGE);
+                return true;
+            }
+        },
         Basket(BASKET_COMMAND) {
             @Override
             boolean execute(CommandExecutor ce, String[] input) {
@@ -73,6 +85,14 @@ public class CommandExecutor {
             @Override
             boolean execute(CommandExecutor ce, String[] input) {
                 ce.output.println(String.format(BASKET_PRICE_MESSAGE, ce.groceryOperations.priceBasket()));
+                return true;
+            }
+        },
+        SetDate(SET_DATE_COMMAND) {
+            @Override
+            boolean execute(CommandExecutor ce, String[] input) {
+                ce.groceryOperations.setDate(LocalDate.parse(input[1]));
+                ce.output.println(String.format(DATE_MESSAGE, ce.groceryOperations.getDate()));
                 return true;
             }
         },

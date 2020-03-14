@@ -6,6 +6,7 @@ import model.Offer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
@@ -79,8 +80,8 @@ public class GroceryOperations {
         return LocalDate.now(clock);
     }
 
-    public void setDate(Clock newClock) {
-        this.clock = newClock;
+    public void setDate(LocalDate newDate) {
+        this.clock = Clock.offset(clock, Duration.between(getDate().atStartOfDay(), newDate.atStartOfDay()));
     }
 
     public BigDecimal priceBasket() {

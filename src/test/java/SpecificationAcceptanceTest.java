@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
@@ -48,7 +49,7 @@ public class SpecificationAcceptanceTest {
         testee.addToBasket(6, Items.APPLES.getName());
         testee.addToBasket(1, Items.MILK.getName());
 
-        testee.setDate(Clock.fixed(Instant.now().plus(5, ChronoUnit.DAYS), ZoneId.systemDefault()));
+        testee.setDate(LocalDate.now().plusDays(5));
         assertThat(testee.priceBasket()).isEqualTo(BigDecimal.valueOf(1.84));
     }
 
@@ -63,7 +64,7 @@ public class SpecificationAcceptanceTest {
         testee.addToBasket(2, Items.SOUP.getName());
         testee.addToBasket(1, Items.BREAD.getName());
 
-        testee.setDate(Clock.fixed(Instant.now().plus(5, ChronoUnit.DAYS), ZoneId.systemDefault()));
+        testee.setDate(LocalDate.now().plusDays(5));
         assertThat(testee.priceBasket()).isEqualTo(BigDecimal.valueOf(1.97));
     }
 }

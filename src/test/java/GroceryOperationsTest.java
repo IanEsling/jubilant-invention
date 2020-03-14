@@ -26,11 +26,11 @@ class GroceryOperationsTest {
     @Test
     void changeApplicationDate() {
 
+        var newDate = LocalDate.now().plusDays(10);
         var testee = GroceryOperations.forItems(items, clock);
         assertThat(testee.getDate()).isEqualTo(LocalDate.now(clock));
-        Clock newClock = Clock.fixed(Instant.from(OffsetDateTime.now().plusDays(10)), ZoneId.systemDefault());
-        testee.setDate(newClock);
-        assertThat(testee.getDate()).isEqualTo(LocalDate.now(newClock));
+        testee.setDate(newDate);
+        assertThat(testee.getDate()).isEqualTo(newDate);
     }
 
     @Test
