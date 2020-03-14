@@ -7,7 +7,7 @@ public class PercentageDiscountOffer implements Offer {
     public static final String OFFER_ITEM_NAME = "PercentageDiscount";
 
     private final Item discountedItem;
-    private int percentageDiscount;
+    private final int percentageDiscount;
 
     private PercentageDiscountOffer(Item discountedItem, int percentageDiscount) {
         this.discountedItem = discountedItem;

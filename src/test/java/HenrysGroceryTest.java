@@ -46,8 +46,8 @@ class HenrysGroceryTest {
 
     static class TimeLimitedRunner implements HenrysGrocery.KeepRunning {
 
-        LocalDateTime start = LocalDateTime.now();
-        private long limit;
+        final LocalDateTime start = LocalDateTime.now();
+        private final long limit;
 
         TimeLimitedRunner(long limit) {
             this.limit = limit;

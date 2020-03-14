@@ -112,7 +112,7 @@ public class CommandExecutor {
             }
         };
 
-        private String commandFor;
+        private final String commandFor;
 
         Command(String commandFor) {
             this.commandFor = commandFor;

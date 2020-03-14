@@ -8,19 +8,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class OfferSchedulerTest {
 
-    private LocalDate offer1Start = LocalDate.now().minusDays(1);
-    private LocalDate offer1End = LocalDate.now().plusDays(2);
-    private LocalDate offer2Start = LocalDate.now().plusDays(1);
-    private LocalDate offer2End = LocalDate.now().plusDays(10);
+    private final LocalDate offer1Start = LocalDate.now().minusDays(1);
+    private final LocalDate offer1End = LocalDate.now().plusDays(2);
+    private final LocalDate offer2Start = LocalDate.now().plusDays(1);
+    private final LocalDate offer2End = LocalDate.now().plusDays(10);
 
-    private Offer offer1 = (b) -> Map.of();
-    private Offer offer2 = (b) -> Map.of();
+    private final Offer offer1 = (b) -> Map.of();
+    private final Offer offer2 = (b) -> Map.of();
 
-    OfferScheduler testee = new OfferScheduler(Map.of(new OfferScheduler.OfferDuration(offer1Start, offer1End), offer1,
+    final OfferScheduler testee = OfferScheduler.forOfferDurations(Map.of(
+            new OfferScheduler.OfferDuration(offer1Start, offer1End), offer1,
             new OfferScheduler.OfferDuration(offer2Start, offer2End), offer2));
 
     @Test
-    void noOffersScheduled(){
+    void noOffersScheduled() {
         var testee = OfferScheduler.empty();
         assertThat(testee.getOffersForDate(LocalDate.now())).isEmpty();
     }

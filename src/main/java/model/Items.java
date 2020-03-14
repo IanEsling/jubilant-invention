@@ -1,6 +1,7 @@
 package model;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.Set;
 
 public class Items {
     public static final Item SOUP = Item.item("soup", 0.65d, "tin");
@@ -13,7 +14,7 @@ public class Items {
         this.items = items;
     }
 
-    public static Items liveItems(){
+    public static Items liveItems() {
         return new Items(Set.of(SOUP, BREAD, MILK, APPLES));
     }
 

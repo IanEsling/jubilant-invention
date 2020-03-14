@@ -16,10 +16,14 @@ public class OfferScheduler {
     private static final Buy2GetHalfOffOffer buy2SoupGetHalfPriceBreadOffer = Buy2GetHalfOffOffer.forItems(Items.SOUP, Items.BREAD);
     private static final PercentageDiscountOffer tenPercentOffApplesOffer = PercentageDiscountOffer.buildOffer(Items.APPLES, 10);
 
-    private Map<OfferDuration, Offer> offerDurations;
+    private final Map<OfferDuration, Offer> offerDurations;
 
-    public OfferScheduler(Map<OfferDuration, Offer> offerDurations) {
+    private OfferScheduler(Map<OfferDuration, Offer> offerDurations) {
         this.offerDurations = offerDurations;
+    }
+
+    public static OfferScheduler forOfferDurations(Map<OfferDuration, Offer> offerDurations) {
+        return new OfferScheduler(offerDurations);
     }
 
     public static OfferScheduler empty() {

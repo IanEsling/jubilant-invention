@@ -1,8 +1,5 @@
 package model;
 
-import model.Basket;
-import model.Item;
-import model.PercentageDiscountOffer;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -13,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class PercentageDiscountOfferTest {
 
     public static final double DISCOUNT_ITEM_COST = 123.45;
-    Item discountItem = Item.item("discount", DISCOUNT_ITEM_COST);
+    final Item discountItem = Item.item("discount", DISCOUNT_ITEM_COST);
 
     @Test
     void expectedOffersForQuantitiesOfOfferItems() {

@@ -1,8 +1,5 @@
 package model;
 
-import model.Basket;
-import model.Buy2GetHalfOffOffer;
-import model.Item;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -14,8 +11,8 @@ class Buy2GetHalfOffOfferTest {
 
     public static final double HALF_OFF_ITEM_COST = 75;
     public static final double HALF_OFF_ITEM_DISCOUNT = -37.5;
-    Item buy2OfferItem = Item.item("buy2", 123);
-    Item getHalfOffOfferItem = Item.item("halfOff", HALF_OFF_ITEM_COST);
+    final Item buy2OfferItem = Item.item("buy2", 123);
+    final Item getHalfOffOfferItem = Item.item("halfOff", HALF_OFF_ITEM_COST);
 
     @Test
     void cannotCreateOfferWithoutItems() {

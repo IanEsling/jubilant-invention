@@ -40,6 +40,23 @@ public class HenrysGrocery {
         grocery.run();
     }
 
+    private static void printWelcome(PrintStream output) {
+        output.println("\n" +
+                "\n" +
+                " _   _                       _       _____                               \n" +
+                "| | | |                     ( )     |  __ \\                              \n" +
+                "| |_| | ___ _ __  _ __ _   _|/ ___  | |  \\/_ __ ___   ___ ___ _ __ _   _ \n" +
+                "|  _  |/ _ \\ '_ \\| '__| | | | / __| | | __| '__/ _ \\ / __/ _ \\ '__| | | |\n" +
+                "| | | |  __/ | | | |  | |_| | \\__ \\ | |_\\ \\ | | (_) | (_|  __/ |  | |_| |\n" +
+                "\\_| |_/\\___|_| |_|_|   \\__, | |___/  \\____/_|  \\___/ \\___\\___|_|   \\__, |\n" +
+                "                        __/ |                                       __/ |\n" +
+                "                       |___/                                       |___/ \n" +
+                "\n");
+        output.println(USAGE_MESSAGE);
+        output.println();
+        output.println();
+    }
+
     public void run() {
         run(() -> true);
     }
@@ -65,23 +82,6 @@ public class HenrysGrocery {
     @FunctionalInterface
     interface KeepRunning {
         boolean keepRunning();
-    }
-
-    private static void printWelcome(PrintStream output) {
-        output.println("\n" +
-                "\n" +
-                " _   _                       _       _____                               \n" +
-                "| | | |                     ( )     |  __ \\                              \n" +
-                "| |_| | ___ _ __  _ __ _   _|/ ___  | |  \\/_ __ ___   ___ ___ _ __ _   _ \n" +
-                "|  _  |/ _ \\ '_ \\| '__| | | | / __| | | __| '__/ _ \\ / __/ _ \\ '__| | | |\n" +
-                "| | | |  __/ | | | |  | |_| | \\__ \\ | |_\\ \\ | | (_) | (_|  __/ |  | |_| |\n" +
-                "\\_| |_/\\___|_| |_|_|   \\__, | |___/  \\____/_|  \\___/ \\___\\___|_|   \\__, |\n" +
-                "                        __/ |                                       __/ |\n" +
-                "                       |___/                                       |___/ \n" +
-                "\n");
-        output.println(USAGE_MESSAGE);
-        output.println();
-        output.println();
     }
 
 }

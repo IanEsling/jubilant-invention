@@ -18,7 +18,7 @@ public class GroceryOperations {
     private final Items items;
     private final Basket basket;
 
-    private OfferScheduler offerScheduler;
+    private final OfferScheduler offerScheduler;
     private Clock clock;
 
     private GroceryOperations(Items items,
