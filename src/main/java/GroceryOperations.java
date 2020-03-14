@@ -52,7 +52,7 @@ public class GroceryOperations {
         return forItemsAndOffers(items, OfferScheduler.empty(), clock);
     }
 
-    public static GroceryOperations liveDataExecutor() {
+    public static GroceryOperations liveDataOperations() {
         return forItemsAndOffers(Items.liveItems(),
                 OfferScheduler.liveOffers());
     }

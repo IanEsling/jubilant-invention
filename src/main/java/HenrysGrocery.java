@@ -15,21 +15,22 @@ public class HenrysGrocery {
             "setdate DD/MM/YYYY - set the date of the grocery" + System.lineSeparator() +
             "Q - Quit the program";
     public static final String ERROR_MESSAGE = "Error trying to process command %s.";
+
     private final Scanner scanner;
     private final PrintStream output;
-    private final GroceryOperations groceryOperations;
+    private final CommandExecutor commandExecutor;
     private boolean running = true;
 
     public HenrysGrocery(InputStream input, PrintStream output) {
-        this(input, output, GroceryOperations.liveDataExecutor());
+        this(input, output, new CommandExecutor(output, GroceryOperations.liveDataOperations()));
     }
 
     public HenrysGrocery(InputStream input,
                          PrintStream output,
-                         GroceryOperations groceryOperations) {
+                         CommandExecutor commandExecutor) {
         this.scanner = new Scanner(input);
         this.output = output;
-        this.groceryOperations = groceryOperations;
+        this.commandExecutor = commandExecutor;
     }
 
     public static void main(String... args) {
@@ -66,43 +67,15 @@ public class HenrysGrocery {
 
                 String[] input = scanner.nextLine().split(" ");
 
-                Command.getCommandFor(input[0]).execute(this, input);
+                try {
+                    commandExecutor.execute(input);
+                } catch (Exception e) {
+                    output.println(String.format(ERROR_MESSAGE, Arrays.toString(input)));
+                    output.println(USAGE_MESSAGE);
+                }
             }
         }
         output.println(QUIT_MESSAGE);
-    }
-
-    enum Command {
-        List("list") {
-            @Override
-            void execute(HenrysGrocery grocery, String[] input) {
-                grocery.output.println();
-                grocery.groceryOperations.listItems();
-            }
-        },
-        Unknown("") {
-            @Override
-            void execute(HenrysGrocery grocery, String[] input) {
-                grocery.output.println(String.format(ERROR_MESSAGE, Arrays.toString(input)));
-                grocery.output.println(USAGE_MESSAGE);
-            }
-        };
-
-        private String commandFor;
-
-        Command(String commandFor) {
-            this.commandFor = commandFor;
-        }
-
-        static Command getCommandFor(String input) {
-            for (Command command : Command.values()) {
-                if (command.commandFor.equalsIgnoreCase(input)) return command;
-            }
-            return Unknown;
-        }
-
-        abstract void execute(HenrysGrocery grocery, String[] input);
-
     }
 
     @FunctionalInterface

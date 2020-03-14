@@ -1,11 +1,14 @@
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
 
 public class CommandExecutor {
 
+    public static final String ERROR_MESSAGE = "Error trying to process command %s.";
     public static final String ITEM_LIST_START_MESSAGE = "Items available:";
     public static final String ITEM_LIST_CONTENT_MESSAGE = "%s! 1 %s for %s";
     public static final String ITEM_LIST_END_MESSAGE = "use the 'add quantity item-name' command to add to your basket.";
+    public static final String LIST_COMMAND = "list";
     private final PrintStream output;
     private final GroceryOperations groceryOperations;
 
@@ -16,12 +19,12 @@ public class CommandExecutor {
     }
 
     public void execute(String[] input) {
-        Command.getCommandFor(this, input[0]).execute(this, input);
+        Command.getCommandFor(input[0]).execute(this, input);
     }
 
 
     enum Command {
-        List("list") {
+        List(LIST_COMMAND) {
             @Override
             void execute(CommandExecutor ce, String[] input) {
                 ce.output.println(ITEM_LIST_START_MESSAGE);
@@ -33,7 +36,7 @@ public class CommandExecutor {
         Unknown("") {
             @Override
             void execute(CommandExecutor ce, String[] input) {
-                ce.output.println(String.format(HenrysGrocery.ERROR_MESSAGE, Arrays.toString(input)));
+                ce.output.println(String.format(ERROR_MESSAGE, Arrays.toString(input)));
                 ce.output.println(HenrysGrocery.USAGE_MESSAGE);
             }
         };
@@ -44,7 +47,7 @@ public class CommandExecutor {
             this.commandFor = commandFor;
         }
 
-        static Command getCommandFor(CommandExecutor ce, String input) {
+        static Command getCommandFor(String input) {
             for (Command command : Command.values()) {
                 if (command.commandFor.equalsIgnoreCase(input)) return command;
             }
