@@ -32,7 +32,7 @@ class HenrysGroceryTest {
         doThrow(RuntimeException.class).when(commandExecutor).execute(any());
         InputStream input = new ByteArrayInputStream("1 2 3".getBytes());
         new HenrysGrocery(input, output, commandExecutor).run(new RunOnce());
-        verify(output, times(1)).println(String.format(CommandExecutor.ERROR_MESSAGE, "[1, 2, 3]"));
+        verify(output, times(1)).println(String.format(CommandExecutor.Messages.ERROR, "[1, 2, 3]"));
         verify(output, times(1)).println(HenrysGrocery.USAGE_MESSAGE);
     }
 

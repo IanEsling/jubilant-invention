@@ -13,8 +13,10 @@ import java.util.stream.Collectors;
 
 public class OfferScheduler {
 
-    private static final Buy2GetHalfOffOffer buy2SoupGetHalfPriceBreadOffer = Buy2GetHalfOffOffer.forItems(Items.SOUP, Items.BREAD);
-    private static final PercentageDiscountOffer tenPercentOffApplesOffer = PercentageDiscountOffer.buildOffer(Items.APPLES, 10);
+    private static final OfferDuration TWO_SOUP_HALF_PRICE_BREAD_DURATION = OfferDuration.between(LocalDate.now().minusDays(1), LocalDate.now().plusDays(7));
+    private static final OfferDuration TEN_PERCENT_OFF_APPLES_DURATION = OfferDuration.between(LocalDate.now().plusDays(3), LocalDate.now().plusMonths(1).with(TemporalAdjusters.lastDayOfMonth()));
+    private static final Buy2GetHalfOffOffer BUY_2_SOUP_GET_HALF_PRICE_BREAD_OFFER = Buy2GetHalfOffOffer.forItems(Items.SOUP, Items.BREAD);
+    private static final PercentageDiscountOffer TEN_PERCENT_OFF_APPLES_OFFER = PercentageDiscountOffer.buildOffer(Items.APPLES, 10);
 
     private final Map<OfferDuration, Offer> offerDurations;
 
@@ -31,9 +33,8 @@ public class OfferScheduler {
     }
 
     public static OfferScheduler liveOffers() {
-        return new OfferScheduler(Map.of(OfferDuration.between(LocalDate.now().minusDays(1), LocalDate.now().plusDays(7)),
-                buy2SoupGetHalfPriceBreadOffer, OfferDuration.between(LocalDate.now().plusDays(3), LocalDate.now().plusMonths(1).with(TemporalAdjusters.lastDayOfMonth())),
-                tenPercentOffApplesOffer));
+        return new OfferScheduler(Map.of(TWO_SOUP_HALF_PRICE_BREAD_DURATION, BUY_2_SOUP_GET_HALF_PRICE_BREAD_OFFER,
+                TEN_PERCENT_OFF_APPLES_DURATION, TEN_PERCENT_OFF_APPLES_OFFER));
     }
 
     public static OfferScheduler forOffers(Offer... offers) {

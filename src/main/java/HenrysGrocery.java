@@ -13,7 +13,7 @@ public class HenrysGrocery {
             "clear - removes everything from your basket" + System.lineSeparator() +
             "price - calculates the price of the basket contents" + System.lineSeparator() +
             "date - show the current date of the grocery" + System.lineSeparator() +
-            "setdate DD/MM/YYYY - set the date of the grocery" + System.lineSeparator() +
+            "setdate YYYY-MM-DD - set the date of the grocery to the given date using the given format" + System.lineSeparator() +
             "Q - Quit the program";
     public static final String ERROR_MESSAGE = "Error trying to process command %s.";
 

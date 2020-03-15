@@ -37,7 +37,7 @@ class PercentageDiscountOfferTest {
         var offer = PercentageDiscountOffer.buildOffer(discountItem, percentageDiscount);
         var expectedOffers = Map.of(Item.item(PercentageDiscountOffer.OFFER_ITEM_NAME, discountAmount),
                 quantityDiscountItems);
-        System.out.println(expectedOffers);
+
         assertThat(offer.apply(basket)).containsExactlyInAnyOrderEntriesOf(expectedOffers);
     }
 }

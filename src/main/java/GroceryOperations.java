@@ -38,7 +38,8 @@ public class GroceryOperations {
         return forItemsAndOffers(items, offers, Clock.systemDefaultZone());
     }
 
-    public static GroceryOperations forItemsAndOffers(Items items, OfferScheduler offers,
+    public static GroceryOperations forItemsAndOffers(Items items,
+                                                      OfferScheduler offers,
                                                       Clock clock) {
         if (items == null || items.getItems() == null || items.getItems().size() == 0)
             throw new UnsupportedOperationException("need at least one item available");
@@ -92,11 +93,11 @@ public class GroceryOperations {
     }
 
     private Map<Item, Integer> applyOffers(Basket basket) {
-        Map<Item, Integer> offerItems = new HashMap<>();
+        Map<Item, Integer> basketAndOfferItems = new HashMap<>();
         offerScheduler.getOffersForDate(LocalDate.now(clock))
-                .forEach(o -> offerItems.putAll(o.apply(basket)));
+                .forEach(o -> basketAndOfferItems.putAll(o.apply(basket)));
 
-        offerItems.putAll(basket.getItems());
-        return offerItems;
+        basketAndOfferItems.putAll(basket.getItems());
+        return basketAndOfferItems;
     }
 }
