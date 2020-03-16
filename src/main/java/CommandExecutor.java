@@ -17,8 +17,7 @@ public class CommandExecutor {
         return Command.getCommandFor(input[0]).execute(this, input);
     }
 
-    @SuppressWarnings("unused")
-            // all enums used just not explicitly referenced
+    @SuppressWarnings("unused") // all enums used just not explicitly referenced
     enum Command {
         Quit(Inputs.QUIT) {
             @Override
